@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 import Header from '../components/Header';
-import SearchBar from '../components/SearchBar';
 import Footer from '../components/Footer';
+import SearchBar from '../components/SearchBar';
 import Cards from '../components/Cards';
 import fetchRecipes from '../services/api';
 import CategoryButtons from '../components/CategoryButtons';
@@ -26,7 +27,10 @@ function Drinks() {
   };
 
   useEffect(() => {
-    getRecipes();
+    if (dataFromApi.recipes.length <= 0) {
+      getRecipes();
+      setRestartRecipes(false);
+    }
   }, []);
 
   if (restartRecipes === true) {

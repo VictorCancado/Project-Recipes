@@ -1,16 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RecipesContext from './RecipesContext';
-import { getRecipesByCategories } from '../services/api';
+import { requestByArea, requestRecipes, getRecipesByCategories } from '../services/api';
 
 function Provider({ children }) {
   const [title, setTitle] = useState();
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const [categoryName, setCategoryName] = useState('');
+  const [restartRecipes, setRestartRecipes] = useState(false);
+  const [hearthIco, setHearthIco] = useState(false);
   const [dataFromApi, setDataFromApi] = useState(
     { recipes: [], meal: '', loading: false },
   );
-  const [restartRecipes, setRestartRecipes] = useState(false);
+  const [recipesFoods, setRecipesFoods] = useState([]);
+  const [foodAreas, setFoodAreas] = useState([]);
+  const [idRecipe, setIdRecipes] = useState();
+  const [categoryName, setCategoryName] = useState('');
+
+  useEffect(() => {
+    requestRecipes().then((meals) => {
+      setRecipesFoods(meals);
+    });
+  }, []);
+
+  useEffect(() => {
+    requestByArea().then((requestAreas) => {
+      setFoodAreas(requestAreas);
+    });
+  }, []);
+
   const getTitleValue = () => {
     setTitle(title);
   };
@@ -33,14 +50,22 @@ function Provider({ children }) {
     setTitle,
     showSearchBar,
     setShowSearchBar,
+    foodAreas,
+    setFoodAreas,
+    recipesFoods,
+    setRecipesFoods,
+    restartRecipes,
+    setRestartRecipes,
     getTitleValue,
     dataFromApi,
     setDataFromApi,
+    idRecipe,
+    setIdRecipes,
     categoryName,
     setCategoryName,
     getCategoryName,
-    restartRecipes,
-    setRestartRecipes,
+    hearthIco,
+    setHearthIco,
   };
 
   return (
